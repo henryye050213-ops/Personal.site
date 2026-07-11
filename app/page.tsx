@@ -4,223 +4,150 @@ import { useEffect, useState } from "react";
 import { ParticlePortrait } from "./ParticlePortrait";
 
 const directions = [
-  {
-    no: "01",
-    title: "AI 聚合平台",
-    status: "已验证",
-    tone: "verified",
-    text: "从真实需求出发完成产品与商业闭环，单月营收达到六位数。",
-  },
-  {
-    no: "02",
-    title: "保研与留学辅导",
-    status: "运营中",
-    tone: "active",
-    text: "联合清北及其他头部 985 学长学姐，提供真实经验支持与一对一辅导。",
-  },
-  {
-    no: "03",
-    title: "电商视觉制作",
-    status: "进行中",
-    tone: "working",
-    text: "为电商企业制作 SKU 图、商品图及其他电商视觉素材。",
-  },
-  {
-    no: "04",
-    title: "俄罗斯跨境电商",
-    status: "探索中",
-    tone: "exploring",
-    text: "研究俄罗斯市场的真实需求、供应链、渠道与跨区域合作机会。",
-  },
-  {
-    no: "05",
-    title: "全球年轻行动者社群",
-    status: "筹备中",
-    tone: "soon",
-    text: "连接来自世界各地，有想法且愿意行动的创业者、开发者、创作者与学生。",
-  },
+  { title: "AI 聚合平台", status: "已验证", tone: "verified", text: "整合优质 AI 工具，完成产品与商业闭环" },
+  { title: "保研与留学辅导", status: "运营中", tone: "active", text: "联合头部高校学长学姐，提供一对一辅导" },
+  { title: "电商视觉制作", status: "进行中", tone: "working", text: "为电商企业制作 SKU 图与商品视觉素材" },
+  { title: "俄罗斯跨境电商", status: "探索中", tone: "exploring", text: "研究当地需求、供应链与渠道合作机会" },
+  { title: "全球年轻行动者社群", status: "筹备中", tone: "soon", text: "连接全球有想法且愿意行动的年轻人" },
 ];
-
-function ArrowIcon() {
-  return <span aria-hidden="true">↗</span>;
-}
 
 export default function Home() {
   const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setContactOpen(false);
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setContactOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   useEffect(() => {
     document.body.style.overflow = contactOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [contactOpen]);
 
   return (
-    <main>
-      <header className="site-header">
-        <a className="brand" href="#top" aria-label="Henry Ye 首页">
-          H<span>Y</span>
-        </a>
-        <nav aria-label="主要导航">
-          <a href="#about">关于我</a>
-          <a href="#now">正在做</a>
-          <a href="#future">未来</a>
-          <button type="button" onClick={() => setContactOpen(true)}>联系我</button>
-        </nav>
-        <a className="x-link" href="https://x.com/HenryY54001" target="_blank" rel="noreferrer" aria-label="在 X 上关注 Henry Ye">𝕏</a>
+    <main id="top">
+      <header className="site-header page-width">
+        <a href="#top" className="nav-active">首页</a>
+        <a href="#now">正在做</a>
+        <a href="#future">未来方向</a>
+        <a href="#about">关于我</a>
+        <button type="button" onClick={() => setContactOpen(true)}>联系我</button>
       </header>
 
-      <section className="hero section-shell" id="top">
-        <div className="hero-copy reveal">
-          <p className="eyebrow">SERIAL ENTREPRENEUR · AI BUILDER</p>
-          <h1>Henry Ye</h1>
-          <p className="hero-role">连续创业者 · AI 产品商业化实践者</p>
-          <p className="hero-lead">
-            用 AI、资源与行动，<br />把真实需求变成可被市场验证的产品。
-          </p>
-          <p className="hero-note">
-            大学期间，从一次没有走到最后的创业重新出发。做成过单月营收六位数的 AI 产品，也在持续探索新的可能。
-          </p>
-          <div className="hero-actions">
-            <a className="button primary" href="#now">看看我在做什么 <ArrowIcon /></a>
-            <button className="button ghost" type="button" onClick={() => setContactOpen(true)}>和我聊聊</button>
-          </div>
-        </div>
-        <div className="portrait-wrap reveal delay-one">
-          <div className="portrait-halo" aria-hidden="true" />
-          <ParticlePortrait src="/assets/henry-avatar.png" />
-          <p className="particle-tip">移动鼠标，扰动粒子</p>
-        </div>
-        <div className="ink-horizon" aria-hidden="true"><i /><i /><i /></div>
-      </section>
-
-      <section className="result section-shell reveal" aria-labelledby="result-title">
-        <div className="result-mark">验证</div>
-        <div>
-          <p className="eyebrow">VERIFIED COMMERCIAL RESULT</p>
-          <h2 id="result-title">单月六位数</h2>
-          <p>成功运营一个 AI 聚合平台，完成从真实需求、产品落地到商业化变现的完整验证。</p>
-        </div>
-        <div className="result-line" aria-hidden="true"><span /><b /><b /><b /><b /></div>
-      </section>
-
-      <section className="about section-shell" id="about">
-        <div className="section-heading reveal">
-          <p className="eyebrow">ABOUT · 01</p>
-          <h2>关于我</h2>
-        </div>
-        <div className="about-grid">
-          <div className="about-story reveal">
-            <p>
-              大学期间，我曾创办公司并担任 CEO。第一次创业最终没有继续下去，却让我更早接触到团队、产品、资源与商业的真实运转。
-            </p>
-            <p>
-              2026 年 6 月，我选择重新从零开始。目前，我持续推进 AI 产品、教育服务、电商视觉与跨境市场等方向。
-            </p>
-            <div className="skills" aria-label="核心能力">
-              <span>AI 应用</span><span>资源整合</span><span>项目执行</span>
+      <section className="hero">
+        <div className="page-width hero-grid">
+          <div className="hero-copy">
+            <h1>Henry Ye</h1>
+            <h2>连续创业者 · AI 产品商业化实践者</h2>
+            <i className="title-rule" />
+            <p>用 AI、资源与行动，把真实需求变成可被市场验证的产品。</p>
+            <div className="hero-links">
+              <a href="#now">查看正在做 →</a>
+              <button type="button" onClick={() => setContactOpen(true)}>联系我 →</button>
             </div>
           </div>
-          <blockquote className="values reveal delay-one">
-            <span>“</span>
-            创业不只是创造收入，更是发现真实的问题，并用新的产品与服务，让世界向更好的方向前进。
-            <cite>MY VALUE · 让世界变得更好</cite>
-          </blockquote>
+          <div className="portrait-area">
+            <ParticlePortrait src="/assets/henry-avatar.png" />
+            <span className="portrait-seal">海墨<br />初青</span>
+            <small>移动鼠标 · 扰动粒子</small>
+          </div>
+        </div>
+        <div className="hero-landscape" aria-hidden="true" />
+      </section>
+
+      <section className="proof page-width" aria-label="核心成果">
+        <div className="proof-icon"><span>✓</span></div>
+        <div className="proof-label"><b>已验证的商业结果</b><i /></div>
+        <div className="proof-main">
+          <h2>单月六位数</h2>
+          <p>AI 聚合平台单月营收达到六位数</p>
+        </div>
+        <div className="proof-chart" aria-hidden="true"><i /><b /><b /><b /><b /><b /></div>
+      </section>
+
+      <section className="about page-width" id="about">
+        <div className="about-copy">
+          <SectionTitle title="关于我" />
+          <p>我相信技术的价值在于解决真实问题，也相信全球协作能放大年轻人的可能。</p>
+          <p>大学期间经历第一次创业，从产品到增长、从 0 到 1，再从 1 到 N。我持续在 AI 与全球市场的交叉点构建可验证的商业模式。</p>
+          <h3>我的价值观</h3>
+          <div className="value-list">
+            <span><b>⌁</b>长期主义</span><span><b>◎</b>结果导向</span><span><b>⊕</b>全球视野</span>
+          </div>
+        </div>
+        <div className="journey">
+          <h3>我的旅程</h3>
+          <ol>
+            <li><time>大学期间</time><span>开始第一次创业尝试，探索内容、产品与商业的结合</span></li>
+            <li><time>2026.06</time><span>重新从零出发，聚焦 AI 产品与商业化验证</span></li>
+            <li><time>现在</time><span>拓展教育服务、电商视觉与跨境市场方向</span></li>
+            <li><time>未来</time><span>连接更多年轻行动者，创造长期影响力</span></li>
+          </ol>
         </div>
       </section>
 
-      <section className="now section-shell" id="now">
-        <div className="section-heading reveal">
-          <p className="eyebrow">CURRENT DIRECTIONS · 02</p>
-          <h2>正在做</h2>
-          <p>不同阶段，同一种方法：从真实需求出发，用行动完成验证。</p>
-        </div>
-        <div className="direction-grid">
+      <section className="projects page-width" id="now">
+        <SectionTitle title="正在做" />
+        <div className="project-grid">
           {directions.map((item, index) => (
-            <article className={`direction-card reveal delay-${(index % 3) + 1}`} key={item.title}>
-              <div className="card-top"><span>{item.no}</span><span className={`status ${item.tone}`}>{item.status}</span></div>
-              <div className={`card-symbol symbol-${index + 1}`} aria-hidden="true"><span /></div>
+            <article className="project-card" key={item.title}>
               <h3>{item.title}</h3>
+              <div className={`project-art art-${index + 1}`} role="img" aria-label={`${item.title}水墨插画`} />
               <p>{item.text}</p>
+              <span className={`project-status ${item.tone}`}>{item.status}</span>
             </article>
           ))}
         </div>
+        <div className="project-more"><i />持续更新中 →<i /></div>
       </section>
 
       <section className="future" id="future">
-        <div className="future-bg" aria-hidden="true"><span /><span /><span /></div>
-        <div className="section-shell future-content">
-          <div className="section-heading reveal">
-            <p className="eyebrow">NEXT HORIZON · 03</p>
-            <h2>向更远处出发</h2>
+        <div className="page-width future-inner">
+          <div className="future-copy">
+            <SectionTitle title="未来方向" />
+            <h3>构建全球年轻行动者的<br />协作网络与价值生态</h3>
+            <div className="future-values">
+              <span><b>♧</b>连接<small>连接全球积极的年轻行动者</small></span>
+              <span><b>⌖</b>协作<small>跨领域协作，放大彼此影响力</small></span>
+              <span><b>↗</b>创造<small>用 AI 与全球资源创造长期价值</small></span>
+            </div>
           </div>
-          <p className="future-lead reveal">
-            持续发现真实需求，整合合适资源，<br />把想法转化为可以被市场验证的产品与服务。
-          </p>
-          <div className="future-points reveal delay-one">
-            <span><b>01</b> 验证新的商业机会</span>
-            <span><b>02</b> 探索俄罗斯跨境市场</span>
-            <span><b>03</b> 连接全球年轻行动者</span>
-          </div>
-          <p className="future-note reveal">寻找值得长期合作的人，一起做对世界有价值的事。</p>
+          <blockquote>一起做长期而有价值的事</blockquote>
         </div>
       </section>
 
-      <section className="connect section-shell" id="contact">
-        <div className="connect-copy reveal">
-          <p className="eyebrow">GET IN TOUCH · 04</p>
-          <h2>一起做点真实的事情</h2>
-          <p>欢迎项目合作、产品交流、联合创业、投资与资源对接。也欢迎来自世界各地的年轻行动者来认识彼此。</p>
-          <button className="button primary" type="button" onClick={() => setContactOpen(true)}>打开联系方式 <ArrowIcon /></button>
+      <section className="contact page-width" id="contact">
+        <div className="contact-copy">
+          <SectionTitle title="联系我" />
+          <p>欢迎交流合作、项目探讨<br />或加入全球年轻行动者社群</p>
+          <button type="button" onClick={() => setContactOpen(true)}>✉&nbsp;&nbsp;打开联系方式</button>
         </div>
-        <div className="social-list reveal delay-one">
-          <a href="https://x.com/HenryY54001" target="_blank" rel="noreferrer"><b>𝕏</b><span><small>实时动态</small>@HenryY54001</span><ArrowIcon /></a>
-          <button type="button" onClick={() => setContactOpen(true)}><b>微</b><span><small>个人微信</small>Henry·葉</span><ArrowIcon /></button>
-          <button type="button" onClick={() => setContactOpen(true)}><b>阅</b><span><small>微信公众号</small>瑞评社 Ray Review</span><ArrowIcon /></button>
-        </div>
+        <button className="contact-qr-placeholder" type="button" onClick={() => setContactOpen(true)}><span />微信</button>
+        <button className="contact-qr-placeholder" type="button" onClick={() => setContactOpen(true)}><span />公众号</button>
+        <a className="contact-x" href="https://x.com/HenryY54001" target="_blank" rel="noreferrer"><b>𝕏</b><span>X / @HenryY54001<small>关注我的最新动态</small></span></a>
       </section>
 
-      <footer>
-        <span>Henry Ye</span>
-        <p>AI · 创业 · 商业观察 · 个人成长</p>
-        <a href="#top">回到顶部 ↑</a>
-      </footer>
+      <footer>瑞评社 Ray Review</footer>
 
       {contactOpen && (
-        <div className="modal-backdrop" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) setContactOpen(false);
-        }}>
-          <section className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="contact-title">
+        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setContactOpen(false)}>
+          <section className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <button className="modal-close" type="button" onClick={() => setContactOpen(false)} aria-label="关闭联系方式">×</button>
-            <div className="modal-head">
-              <p className="eyebrow">CONNECT WITH HENRY</p>
-              <h2 id="contact-title">选择一种方式认识我</h2>
-              <p>项目合作、交流想法，或者只是来打个招呼。</p>
-            </div>
+            <p className="modal-kicker">CONNECT WITH HENRY</p>
+            <h2 id="modal-title">选择一种方式认识我</h2>
             <div className="qr-grid">
-              <article>
-                <img src="/assets/wechat-qr.jpg" alt="Henry Ye 的个人微信二维码" />
-                <h3>个人微信</h3>
-                <p>请备注：姓名 + 所在城市 + 想交流的方向</p>
-              </article>
-              <article>
-                <img src="/assets/ray-review-qr.jpg" alt="瑞评社 Ray Review 公众号二维码" />
-                <h3>瑞评社 Ray Review</h3>
-                <p>AI、创业、商业观察与个人成长</p>
-              </article>
+              <article><img src="/assets/wechat-qr.jpg" alt="Henry Ye 个人微信二维码" /><h3>个人微信</h3><p>请备注：姓名 + 所在城市 + 想交流的方向</p></article>
+              <article><img src="/assets/ray-review-qr.jpg" alt="瑞评社 Ray Review 公众号二维码" /><h3>瑞评社 Ray Review</h3><p>AI、创业、商业观察与个人成长</p></article>
             </div>
-            <a className="modal-x" href="https://x.com/HenryY54001" target="_blank" rel="noreferrer">也可以在 X 上找到我 · @HenryY54001 <ArrowIcon /></a>
+            <a href="https://x.com/HenryY54001" target="_blank" rel="noreferrer">也可以在 X 上找到我 · @HenryY54001 ↗</a>
           </section>
         </div>
       )}
     </main>
   );
+}
+
+function SectionTitle({ title }: { title: string }) {
+  return <div className="section-title"><h2>{title}</h2><i /></div>;
 }
