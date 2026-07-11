@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { ParticlePortrait } from "./ParticlePortrait";
 
 const directions = [
@@ -12,19 +11,6 @@ const directions = [
 ];
 
 export default function Home() {
-  const [contactOpen, setContactOpen] = useState(false);
-
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setContactOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = contactOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [contactOpen]);
-
   return (
     <main id="top">
       <header className="site-header page-width">
@@ -32,7 +18,7 @@ export default function Home() {
         <a href="#now">正在做</a>
         <a href="#future">未来方向</a>
         <a href="#about">关于我</a>
-        <button type="button" onClick={() => setContactOpen(true)}>联系我</button>
+        <a href="#contact">联系我</a>
       </header>
 
       <section className="hero">
@@ -44,7 +30,7 @@ export default function Home() {
             <p>用 AI、资源与行动，把真实需求变成可被市场验证的产品。</p>
             <div className="hero-links">
               <a href="#now">查看正在做 →</a>
-              <button type="button" onClick={() => setContactOpen(true)}>联系我 →</button>
+              <a href="#contact">联系我 →</a>
             </div>
           </div>
           <div className="portrait-area">
@@ -121,29 +107,13 @@ export default function Home() {
         <div className="contact-copy">
           <SectionTitle title="联系我" />
           <p>欢迎交流合作、项目探讨<br />或加入全球年轻行动者社群</p>
-          <button type="button" onClick={() => setContactOpen(true)}>✉&nbsp;&nbsp;打开联系方式</button>
         </div>
-        <button className="contact-qr-placeholder" type="button" onClick={() => setContactOpen(true)}><span />微信</button>
-        <button className="contact-qr-placeholder" type="button" onClick={() => setContactOpen(true)}><span />公众号</button>
+        <figure className="contact-qr"><img src="/assets/wechat-qr.jpg" alt="Henry Ye 个人微信二维码" /><figcaption>个人微信<small>合作与交流</small></figcaption></figure>
+        <figure className="contact-qr"><img src="/assets/ray-review-qr.jpg" alt="瑞评社 Ray Review 公众号二维码" /><figcaption>瑞评社 Ray Review<small>AI · 创业 · 商业观察</small></figcaption></figure>
         <a className="contact-x" href="https://x.com/HenryY54001" target="_blank" rel="noreferrer"><b>𝕏</b><span>X / @HenryY54001<small>关注我的最新动态</small></span></a>
       </section>
 
       <footer>瑞评社 Ray Review</footer>
-
-      {contactOpen && (
-        <div className="modal-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setContactOpen(false)}>
-          <section className="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-            <button className="modal-close" type="button" onClick={() => setContactOpen(false)} aria-label="关闭联系方式">×</button>
-            <p className="modal-kicker">CONNECT WITH HENRY</p>
-            <h2 id="modal-title">选择一种方式认识我</h2>
-            <div className="qr-grid">
-              <article><img src="/assets/wechat-qr.jpg" alt="Henry Ye 个人微信二维码" /><h3>个人微信</h3><p>请备注：姓名 + 所在城市 + 想交流的方向</p></article>
-              <article><img src="/assets/ray-review-qr.jpg" alt="瑞评社 Ray Review 公众号二维码" /><h3>瑞评社 Ray Review</h3><p>AI、创业、商业观察与个人成长</p></article>
-            </div>
-            <a href="https://x.com/HenryY54001" target="_blank" rel="noreferrer">也可以在 X 上找到我 · @HenryY54001 ↗</a>
-          </section>
-        </div>
-      )}
     </main>
   );
 }
