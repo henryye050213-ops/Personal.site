@@ -73,6 +73,7 @@ export function ParticlePortrait({ src }: { src: string }) {
           const r = data[i];
           const g = data[i + 1];
           const b = data[i + 2];
+          const sourceAlpha = data[i + 3] / 255;
           const brightness = (r + g + b) / 3;
           if (brightness > 246 && Math.random() > 0.08) continue;
           next.push({
@@ -81,8 +82,8 @@ export function ParticlePortrait({ src }: { src: string }) {
             homeX: x,
             homeY: y,
             r: gap * (brightness < 120 ? 0.42 : 0.32),
-            color: `rgb(${Math.round(r * 0.72)}, ${Math.round(g * 0.86)}, ${Math.round(b * 0.84)})`,
-            alpha: Math.max(0.22, 1 - brightness / 320),
+            color: `rgb(${r}, ${g}, ${b})`,
+            alpha: sourceAlpha,
           });
         }
       }
