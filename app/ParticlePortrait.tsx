@@ -10,6 +10,9 @@ type Particle = {
   r: number;
   color: string;
   alpha: number;
+  phase: number;
+  vx: number;
+  vy: number;
 };
 
 export function ParticlePortrait({ src }: { src: string }) {
@@ -18,6 +21,8 @@ export function ParticlePortrait({ src }: { src: string }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    const interactionTarget = canvas.parentElement;
+    if (!interactionTarget) return;
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
@@ -30,6 +35,10 @@ export function ParticlePortrait({ src }: { src: string }) {
     let mouse = { x: -1000, y: -1000, active: false };
     let width = 0;
     let height = 0;
+    let hasBuilt = false;
+    let canvasVisible = true;
+    let documentVisible = !document.hidden;
+    let animationStartedAt = performance.now();
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -55,18 +64,19 @@ export function ParticlePortrait({ src }: { src: string }) {
       let dx = 0;
       let dy = 0;
       if (imageRatio > boxRatio) {
-        drawH = height;
-        drawW = height * imageRatio;
-        dx = (width - drawW) / 2;
-      } else {
         drawW = width;
         drawH = width / imageRatio;
         dy = (height - drawH) / 2;
+      } else {
+        drawH = height;
+        drawW = height * imageRatio;
+        dx = (width - drawW) / 2;
       }
       sctx.drawImage(image, dx, dy, drawW, drawH);
       const data = sctx.getImageData(0, 0, width, height).data;
-      const gap = coarse ? 6 : 4;
+      const gap = coarse || width < 420 ? 7 : 5;
       const next: Particle[] = [];
+      const shouldAssemble = !reduced && !hasBuilt;
       for (let y = 0; y < height; y += gap) {
         for (let x = 0; x < width; x += gap) {
           const i = (y * width + x) * 4;
@@ -74,36 +84,58 @@ export function ParticlePortrait({ src }: { src: string }) {
           const g = data[i + 1];
           const b = data[i + 2];
           const sourceAlpha = data[i + 3] / 255;
+          if (sourceAlpha < 0.05) continue;
           const brightness = (r + g + b) / 3;
-          if (brightness > 246 && Math.random() > 0.08) continue;
+          if (brightness > 250) continue;
+          const angle = Math.random() * Math.PI * 2;
+          const scatter = shouldAssemble ? 42 + Math.random() * 96 : 0;
           next.push({
-            x: reduced ? x : x + (Math.random() - 0.5) * 28,
-            y: reduced ? y : y + (Math.random() - 0.5) * 28,
+            x: x + Math.cos(angle) * scatter,
+            y: y + Math.sin(angle) * scatter,
             homeX: x,
             homeY: y,
-            r: gap * (brightness < 120 ? 0.42 : 0.32),
+            r: Math.max(1.2, Math.min(2.2, gap * (brightness < 120 ? 0.24 : 0.2))),
             color: `rgb(${r}, ${g}, ${b})`,
             alpha: sourceAlpha,
+            phase: Math.random() * Math.PI * 2,
+            vx: 0,
+            vy: 0,
           });
         }
       }
       particles = next;
+      if (shouldAssemble) animationStartedAt = performance.now();
+      hasBuilt = true;
     };
 
-    const draw = () => {
+    const draw = (now: number) => {
       ctx.clearRect(0, 0, width, height);
-      const radius = coarse ? 55 : 76;
+      const radius = coarse ? 96 : 148;
+      const assembled = reduced || now - animationStartedAt > 2100;
       for (const particle of particles) {
         const dx = particle.x - mouse.x;
         const dy = particle.y - mouse.y;
         const distance = Math.sqrt(dx * dx + dy * dy) || 1;
         if (mouse.active && distance < radius && !reduced) {
           const force = (radius - distance) / radius;
-          particle.x += (dx / distance) * force * 5.8;
-          particle.y += (dy / distance) * force * 5.8;
+          const push = force * force * 2.35;
+          const swirl = force * 0.42;
+          particle.vx += (dx / distance) * push - (dy / distance) * swirl;
+          particle.vy += (dy / distance) * push + (dx / distance) * swirl;
         }
-        particle.x += (particle.homeX - particle.x) * (reduced ? 1 : 0.075);
-        particle.y += (particle.homeY - particle.y) * (reduced ? 1 : 0.075);
+        const driftX = assembled && !coarse ? Math.sin(now * 0.00055 + particle.phase) * 0.7 : 0;
+        const driftY = assembled && !coarse ? Math.cos(now * 0.00048 + particle.phase) * 0.55 : 0;
+        if (reduced) {
+          particle.x = particle.homeX;
+          particle.y = particle.homeY;
+        } else {
+          particle.vx += (particle.homeX + driftX - particle.x) * 0.024;
+          particle.vy += (particle.homeY + driftY - particle.y) * 0.024;
+          particle.vx *= 0.91;
+          particle.vy *= 0.91;
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+        }
         ctx.globalAlpha = particle.alpha;
         ctx.fillStyle = particle.color;
         ctx.beginPath();
@@ -111,7 +143,12 @@ export function ParticlePortrait({ src }: { src: string }) {
         ctx.fill();
       }
       ctx.globalAlpha = 1;
-      frame = requestAnimationFrame(draw);
+      if (!reduced && canvasVisible && documentVisible) frame = requestAnimationFrame(draw);
+    };
+
+    const resume = () => {
+      cancelAnimationFrame(frame);
+      if (canvasVisible && documentVisible) frame = requestAnimationFrame(draw);
     };
 
     const pointerMove = (event: PointerEvent) => {
@@ -124,19 +161,32 @@ export function ParticlePortrait({ src }: { src: string }) {
       window.setTimeout(() => { mouse.active = false; }, 500);
     };
 
-    image.onload = () => { resize(); draw(); };
+    image.onload = () => { resize(); resume(); };
+    image.onerror = () => { ctx.clearRect(0, 0, width, height); };
     const observer = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      canvasVisible = entry.isIntersecting;
+      resume();
+    }, { rootMargin: "120px" });
+    const visibilityChange = () => {
+      documentVisible = !document.hidden;
+      resume();
+    };
     observer.observe(canvas);
-    canvas.addEventListener("pointermove", pointerMove);
-    canvas.addEventListener("pointerleave", pointerLeave);
-    canvas.addEventListener("pointerdown", pointerDown);
+    visibilityObserver.observe(canvas);
+    document.addEventListener("visibilitychange", visibilityChange);
+    interactionTarget.addEventListener("pointermove", pointerMove);
+    interactionTarget.addEventListener("pointerleave", pointerLeave);
+    interactionTarget.addEventListener("pointerdown", pointerDown);
 
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
-      canvas.removeEventListener("pointermove", pointerMove);
-      canvas.removeEventListener("pointerleave", pointerLeave);
-      canvas.removeEventListener("pointerdown", pointerDown);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", visibilityChange);
+      interactionTarget.removeEventListener("pointermove", pointerMove);
+      interactionTarget.removeEventListener("pointerleave", pointerLeave);
+      interactionTarget.removeEventListener("pointerdown", pointerDown);
     };
   }, [src]);
 
