@@ -1,51 +1,38 @@
 # Henry Ye 个人网站
 
-这是可直接上传 GitHub、交给 Vercel 托管的纯 HTML / CSS / JavaScript 静态网站。没有 Node.js、React、Next.js 或其他框架运行依赖，不需要安装依赖、执行构建或租用后端服务器。
+这是一个不依赖 Node.js 或任何前端框架的原生静态网站。
 
-## 文件结构
+- 入口：`index.html`
+- 样式：`app/globals.css`
+- 交互与粒子效果：`script.js`
+- 图片素材：`public/assets/`
 
-```text
-仓库根目录/
-├── app/
-│   ├── globals.css
-│   └── cyber-theme.css
-├── public/
-│   ├── assets/
-│   └── favicon-cyber.svg
-├── .gitignore
-├── README.md
-├── index.html
-├── script.js
-└── vercel.json
-```
+将仓库直接导入 Vercel 即可部署，无需安装依赖或执行构建命令。
 
-`app/` 只是存放 CSS 的普通文件夹，不是框架工程。头像粒子、首页及未来方向的背景动效均在浏览器中运行，已经合并到 `script.js`。
+## 紫色科技风版本
 
-## 上传 GitHub
+- `app/cyber-theme.css`：新头像与 X 背景对应的深蓝黑、紫色主题；原基础样式仍保留。
+- `public/assets/henry-avatar-cyber.png`：新头像。底层图片和粒子采样共用同一个图片元素，保留原图 RGB。
+- `public/assets/henry-x-banner.png`：用户提供的 X 主页背景，直接使用原文件。
+- `ambient.js`：首页与 What’s next 共用的线路流光、缓慢光环和少量背景微粒；每个区块独立管理可见性并在离屏时暂停，无需视频或动画库。
 
-1. 解压上传包，打开包含 `index.html` 的文件夹。
-2. 将上面列出的文件和文件夹上传到 GitHub 仓库根目录。
-3. 确认在仓库首页可以直接看到 `index.html`。不要把外层“Henry-Ye-GitHub-纯静态版”文件夹一起套进去，也不要只上传 ZIP 文件。
-4. 更新已有仓库时，覆盖同名文件，并上传 `app/` 和 `public/` 中新增或更新的文件。不要混入旧的框架工程、测试目录或备份文件。
+### 动效调节
 
-## Vercel 设置
+- 头像粒子参数位于 `script.js` 的 `settings`：桌面预算 `11000`、移动端预算 `3400`，采样网格随尺寸调整；`radius`、`push`、`spring`、`friction` 控制扰动和回弹。
+- 头像底图可见度位于 `app/cyber-theme.css` 的 `.portrait-area.particles-ready .faded-portrait`，当前为 `0.48`，不修改上层粒子的 RGB 或透明度。
+- 背景参数位于 `ambient.js` 的 `settings`：线路循环 `14` 秒，桌面背景绘制上限 `30fps`、移动端 `20fps`；光环周期 `18` 秒。
+- 系统开启减少动态效果时，头像只绘制静态粒子，关闭背景动画与视差；切换后台或离开可视区域会暂停 Canvas。
+- 浏览器禁止读取本地图片像素时（例如部分浏览器的 `file://` 页面），自动显示完整头像；通过本地 HTTP 预览或托管访问可使用粒子效果。
 
-本包的 `vercel.json` 已设置：
+旧版恢复包：`output/backups/ink-site-2026-09-04.zip`，包含水墨版网页、粒子代码及素材，不是当前业务资料的备份。
 
-- Framework Preset：Other（无框架）
-- Install Command：空，跳过安装
-- Build Command：空，跳过构建
-- Output Directory：`.`（仓库根目录）
+## 个人资料与业务
 
-导入仓库时，Root Directory 保持仓库根目录，不要选 `app` 或 `public`。如果旧项目在控制台保留了旧的根目录设置，需要改回根目录。
+- `index.html`：个人介绍、公司与联合创始人角色、FDE 核心定位、业务状态及未来方向。
+- 当前业务分为企业 AI 咨询与 FDE 交付、FDE 项目平台、企业智能体软硬件、行业软件与 AI 升级、AI 内容生产案例和传统产业 AI 化服务。
+- AI 内容生产被标注为已落地能力案例，不作为观天旗下独立产品；其他业务分别标明建设、试点、迭代或洽谈状态。
+- “天行计划”放在未来方向，定位为职业学校 AI 教学、企业实训与后续人才服务，未表述为已经完成的业务。
+- `public/assets/icons/`：与六个业务模块对应的原生 SVG 图标，不依赖图片生成服务或图标库。
+- 网站未公开合作条款、利润预测或非公开合作单位名称。
 
-参考：[Vercel 静态站点构建设置](https://vercel.com/docs/builds/configure-a-build)、[vercel.json 配置](https://vercel.com/docs/project-configuration/vercel-json)。
-
-## 内容与效果
-
-- `index.html`：个人资料、公司与项目、历史成果、未来方向、联系方式。
-- `app/`：页面样式与紫色科技风主题。
-- `script.js`：导航、入场与滚动动画、头像粒子、背景线路动效。
-- `public/assets/`：头像、背景、二维码和项目 SVG 图标。
-
-修改文案不会要求重新编译。在线托管访问时可直接使用粒子交互；部分浏览器直接双击本地 `index.html` 时会限制图片像素读取，此时自动显示完整头像。系统开启“减少动态效果”时，页面会主动关闭持续动画。
+`output/` 中的备份、检查脚本和截图不属于网站运行所需文件，上传时可以排除；无需提交它们，也没有新增运行依赖。

@@ -67,7 +67,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #bd9bff; outline-offs
 .about-copy > p { color: #b6b3cc; font-size: 16px; }
 .about-copy h3, .journey h3 { color: #c9b4ff; font-family: var(--sans); }
 .company-info { margin: 28px 0 0; padding-block: 8px; border-block: 1px solid var(--line); }
-.company-info > div { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; padding-block: 10px; font: 13px/1.8 var(--sans); }
+.company-info > div { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 12px; padding-block: 10px; font: 13px/1.8 var(--sans); }
 .company-info dt { color: var(--muted); }
 .company-info dd { margin: 0; color: #d6cbea; overflow-wrap: anywhere; }
 .value-list { gap: 23px; flex-wrap: wrap; color: #c1bed5; }
@@ -82,7 +82,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid #bd9bff; outline-offs
 
 .theme-cyber .projects { background: var(--paper); }
 .project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.theme-cyber .project-card { border-radius: 8px; border-color: var(--line); background: #101021; padding: 25px 16px; min-height: 380px; }
+.theme-cyber .project-card { border-radius: 8px; border-color: var(--line); background: #101021; padding: 25px 16px; min-height: 430px; }
 .theme-cyber .project-card:hover { background: #15112a; box-shadow: 0 12px 35px rgba(59, 26, 134, .2); border-color: #8150df; }
 .project-card h3 { color: #e7e0fa; font: 500 17px/1.5 var(--sans); }
 .project-card p { color: #aba7c2; font-size: 14px; line-height: 1.85; margin-bottom: 22px; }
@@ -154,9 +154,7 @@ footer { padding: 23px 16px; color: #9690aa; border-color: var(--line); font-siz
   .about { grid-template-columns: 1fr; }
   .journey { padding-left: 0; border: 0; }
   .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .project-card:first-child { grid-column: 1 / -1; }
-  .project-card:last-child { grid-column: auto; }
-  .project-card:first-child p { max-width: 560px; }
+  .project-card:first-child, .project-card:last-child { grid-column: auto; }
   .theme-cyber .future { min-height: 710px; }
   .future-scene { height: 65%; }
   .future-inner { height: auto; min-height: 340px; }
@@ -196,7 +194,7 @@ footer { padding: 23px 16px; color: #9690aa; border-color: var(--line); font-siz
   .project-art { height: 165px; max-width: 230px; }
   .project-card h3 { min-height: 30px; font-size: 20px; }
   .project-card p { min-height: auto; margin-bottom: 20px; }
-  .company-info > div { grid-template-columns: 72px minmax(0, 1fr); gap: 8px; font-size: 12px; }
+  .company-info > div { grid-template-columns: 96px minmax(0, 1fr); gap: 8px; font-size: 12px; }
   .resource-note { display: block; padding-block: 18px; }
   .resource-note h3 { margin-bottom: 8px; }
   .future-copy h3 { font-size: 23px; }
